@@ -2,7 +2,6 @@ package com.example.boardservice.controller;
 
 import com.example.boardservice.entity.Board;
 import com.example.boardservice.service.BoardService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,8 +11,12 @@ import java.util.UUID;
 @RequestMapping("/api/boards")
 public class BoardController {
 
-    @Autowired
-    private BoardService boardService;
+
+    private final BoardService boardService;
+
+    public BoardController(BoardService boardService) {
+        this.boardService = boardService;
+    }
 
     // Регистрация новой платы
     @PostMapping
@@ -24,8 +27,8 @@ public class BoardController {
 
     // Перемещение платы по шагам
     @PatchMapping("/{boardId}/move")
-    public ResponseEntity<Board> moveBoard(@PathVariable UUID boardId, @RequestParam String nextStep) {
-        Board updatedBoard = boardService.moveBoard(boardId, nextStep);
+    public ResponseEntity<UUID> moveBoard(@PathVariable UUID boardId, @RequestParam String nextStep) {
+        UUID updatedBoard = boardService.moveBoard(boardId, nextStep);
         return ResponseEntity.ok(updatedBoard);
     }
 }
